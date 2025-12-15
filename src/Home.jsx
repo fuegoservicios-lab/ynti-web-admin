@@ -22,7 +22,7 @@ export default function Home() {
 
                         <div className="flex items-center gap-4">
                             <a
-                                href="https://wa.me/18098014545"
+                                href="https://wa.me/18093993181"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hidden md:flex items-center gap-2 px-6 py-3 rounded-full bg-brand-600 text-white font-bold text-sm shadow-lg shadow-brand-500/25 hover:bg-brand-700 hover:shadow-brand-500/40 hover:-translate-y-0.5 transition-all active:scale-95 group"
@@ -73,7 +73,7 @@ export default function Home() {
 
                     <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-200">
                         <a
-                            href="https://wa.me/18098014545"
+                            href="https://wa.me/18093993181"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-slate-900 text-white text-lg font-bold shadow-2xl shadow-slate-900/20 hover:bg-slate-800 hover:scale-[1.02] transition-all transform active:scale-95"
@@ -190,7 +190,7 @@ export default function Home() {
                         <div className="text-sm text-slate-500 flex gap-6">
                             <Link to="/privacidad" className="hover:text-brand-600 transition-colors">Privacidad</Link>
                             <Link to="/terminos" className="hover:text-brand-600 transition-colors">Términos</Link>
-                            <a href="https://wa.me/18098014545" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600 transition-colors">Contacto</a>
+                            <a href="https://wa.me/18093993181" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600 transition-colors">Contacto</a>
                         </div>
 
                         <p className="text-xs text-slate-400">

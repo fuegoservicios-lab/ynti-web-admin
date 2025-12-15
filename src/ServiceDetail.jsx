@@ -64,7 +64,7 @@ export default function ServiceDetail() {
                             ¿Es este el tratamiento adecuado para ti?
                         </h3>
                         <a
-                            href="https://wa.me/18098014545"
+                            href="https://wa.me/18093993181"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-brand-600 text-white font-bold text-lg shadow-lg shadow-brand-500/30 hover:bg-brand-700 hover:-translate-y-1 transition-all"
