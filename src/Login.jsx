@@ -6,17 +6,16 @@ import { supabase } from './supabaseClient';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(import.meta.env.VITE_ADMIN_EMAIL || '');
+  const [password, setPassword] = useState(import.meta.env.VITE_ADMIN_PASSWORD || '');
+  
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Mantener sesión iniciada
   const [rememberMe, setRememberMe] = useState(true);
 
-  // Logo con fallback
   const [logoOk, setLogoOk] = useState(true);
-  const LOGO_SRC = "/logo-ynti.png"; // debe existir en /public
+  const LOGO_SRC = "/logo-ynti.png"; 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +30,6 @@ export default function Login() {
 
       if (error) throw error;
 
-      // Redirect to dashboard on success
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Credenciales incorrectas. Intenta de nuevo.');
@@ -41,13 +39,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-brand-50 flex items-center justify-center p-4 font-sans">
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100">
+    // CORRECCIÓN 1: 'bg-gradient-to-br' -> 'bg-linear-to-br'
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-brand-50 flex items-center justify-center p-4 font-sans">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-300">
+        
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-600 to-brand-700 p-8 text-center relative overflow-hidden">
+        {/* CORRECCIÓN 2: 'bg-gradient-to-r' -> 'bg-linear-to-r' */}
+        <div className="bg-linear-to-r from-brand-600 to-brand-700 p-8 text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-white opacity-5 transform -skew-y-6 scale-150 origin-top-left"></div>
 
-          {/* Logo */}
+          {/* Logo Container */}
           <div className="bg-white/95 w-32 h-32 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg backdrop-blur-sm relative z-10 overflow-hidden p-2">
             {logoOk ? (
               <img
@@ -69,7 +70,7 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Form */}
+        {/* Formulario */}
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           {error && (
             <div className="flex items-center gap-3 bg-red-50 text-red-600 p-4 rounded-xl text-sm border border-red-100 animate-in fade-in slide-in-from-top-2">
@@ -114,15 +115,14 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Remember */}
           <div
             className="flex items-center gap-3 cursor-pointer group select-none"
             onClick={() => setRememberMe(!rememberMe)}
           >
             <div
               className={`w-6 h-6 rounded-[0.4rem] border-2 flex items-center justify-center transition-all duration-200 ${rememberMe
-                  ? 'bg-brand-600 border-brand-600 shadow-sm shadow-brand-200'
-                  : 'bg-slate-50 border-slate-300 group-hover:border-brand-400'
+                ? 'bg-brand-600 border-brand-600 shadow-sm shadow-brand-200'
+                : 'bg-slate-50 border-slate-300 group-hover:border-brand-400'
                 }`}
             >
               {rememberMe && <CheckSquare size={16} className="text-white" />}
@@ -132,7 +132,6 @@ export default function Login() {
             </span>
           </div>
 
-          {/* Button */}
           <button
             type="submit"
             disabled={loading}
@@ -150,7 +149,6 @@ export default function Login() {
             )}
           </button>
 
-          {/* Back to Home */}
           <Link
             to="/"
             className="flex items-center justify-center gap-2 text-slate-500 hover:text-brand-600 font-medium transition-colors mt-4"

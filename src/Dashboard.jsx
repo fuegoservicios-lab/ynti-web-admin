@@ -1,5 +1,6 @@
 // src/Dashboard.jsx
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import DoctorsPanel from "./DoctorsPanel";
 
@@ -8,7 +9,7 @@ const BRAND = {
   name: "Ynti Eusebio",
   colors: {
     bg: "bg-[#F8F9FC]",
-    primary: "bg-brand-600", // Usando variable de Tailwind v4
+    primary: "bg-brand-600",
     textMain: "text-slate-800",
     textLight: "text-slate-500",
   },
@@ -95,8 +96,9 @@ function StatusBadge({ status }) {
 
   const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide border";
 
+
   if (["AGENDADA", "CONFIRMADA"].includes(s)) {
-    return <span className={`${baseClasses} bg-teal-50 text-teal-700 border-teal-200/60`}>{status}</span>;
+    return <span className={`${baseClasses} bg-teal-50 text-teal-700 border-teal-200`}>{status}</span>;
   }
   if (["PENDIENTE", "REPROGRAMADA"].includes(s)) {
     return <span className={`${baseClasses} bg-amber-50 text-amber-700 border-amber-200/60`}>{status}</span>;
@@ -416,18 +418,18 @@ export default function Dashboard() {
 
       {/* --- HEADER --- */}
       {/* --- HEADER --- */}
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-slate-100 px-4 py-3 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.05)]">
-        <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 py-4 shadow-sm">
+        <div className="max-w-[1600px] mx-auto flex justify-between items-center gap-4">
           {/* Logo Area */}
-          <div className="flex items-center gap-2.5">
-            <img src="/logo-ynti.png" alt="Logo" className="w-9 h-9 md:w-11 md:h-11 object-contain" />
+          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ir al Inicio">
+            <img src="/logo-ynti.png" alt="Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain" />
             <div className="leading-none">
-              <h1 className="text-[17px] md:text-xl font-extrabold text-slate-800 tracking-tight">Panel Admin</h1>
+              <h1 className="text-[19px] md:text-2xl font-bold text-slate-900 tracking-tight">Panel Admin</h1>
             </div>
-          </div>
+          </Link>
 
           {/* Actions Area */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
 
             {/* Reset Button */}
             <button
@@ -485,18 +487,19 @@ export default function Dashboard() {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="max-w-7xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
+      <main className="max-w-[1600px] mx-auto p-4 md:p-8 space-y-6 md:space-y-8">
 
         {/* Toolbar */}
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              <input type="text" placeholder="Buscar paciente..." className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all shadow-sm" value={query} onChange={e => setQuery(e.target.value)} />
+              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <input type="text" placeholder="Buscar por paciente..." className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 focus:ring-4 focus:ring-slate-100 focus:border-brand-500 outline-none transition-all shadow-sm" value={query} onChange={e => setQuery(e.target.value)} />
             </div>
 
-            <select className="px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 outline-none focus:border-purple-500 cursor-pointer shadow-sm md:w-48" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
-              <option value="ALL">Todos</option>
+            <select className="px-5 py-3.5 rounded-2xl border border-slate-200 bg-white text-slate-700 outline-none hover:border-slate-300 focus:ring-4 focus:ring-slate-100 focus:border-brand-500 cursor-pointer shadow-sm md:w-56 font-medium" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+              <option value="ALL">Todos los estados</option>
+              {/* Opción 'Agendada' y otras... */}
               <option value="AGENDADA">Agendada</option>
               <option value="PENDIENTE">Pendiente</option>
               <option value="CANCELADA">Cancelada</option>
@@ -520,45 +523,45 @@ export default function Dashboard() {
           <div className="text-center py-20 text-slate-400 animate-pulse">Cargando citas...</div>
         ) : (
           <>
-            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
               <table className="w-full text-left border-collapse">
-                <thead className="bg-[#F8FAFC] border-b border-slate-200 text-[11px] uppercase text-slate-500 font-bold tracking-wider">
+                <thead className="bg-[#F8FAFC] border-b border-slate-100 text-[11px] uppercase text-slate-400 font-bold tracking-widest">
                   <tr>
-                    <th className="px-6 py-4">Paciente</th>
-                    <th className="px-6 py-4">Fecha y Hora</th>
-                    <th className="px-6 py-4">Servicio</th>
-                    <th className="px-6 py-4">Especialista</th>
-                    <th className="px-6 py-4">Estado</th>
-                    <th className="px-6 py-4">Origen</th>
-                    <th className="px-6 py-4 text-center">Acciones</th>
+                    <th className="px-8 py-5">Paciente</th>
+                    <th className="px-6 py-5">Fecha</th>
+                    <th className="px-6 py-5">Servicio</th>
+                    <th className="px-6 py-5">Especialista</th>
+                    <th className="px-6 py-5">Estado</th>
+                    <th className="px-6 py-5 text-center">Origen</th>
+                    <th className="px-6 py-5 text-center">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-slate-50">
                   {filteredAppointments.length > 0 ? filteredAppointments.map(apt => (
-                    <tr key={apt.id || Math.random()} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-sm shrink-0 border border-blue-100">
+                    <tr key={apt.id || Math.random()} className="group hover:bg-slate-50/80 transition-colors">
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm shrink-0 border border-slate-200 shadow-sm group-hover:bg-white group-hover:scale-110 transition-all duration-300">
                             {initials(apt.patient)}
                           </div>
                           <div>
-                            <div className="font-bold text-slate-800 text-sm">{apt.patient}</div>
-                            <div className="flex items-center gap-1 text-xs text-slate-400 mt-0.5">
+                            <div className="font-bold text-slate-900 text-[15px] group-hover:text-brand-600 transition-colors">{apt.patient}</div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
                               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                               {formatPhone(apt.phone)}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5">
-                        <div className="font-bold text-slate-700 text-sm">{formatDateTime(apt.datetime).date}</div>
-                        <div className="text-xs text-slate-500 mt-0.5">{formatDateTime(apt.datetime).time}</div>
+                      <td className="px-6 py-6">
+                        <div className="font-bold text-slate-700 text-sm capitalize">{formatDateTime(apt.datetime).date}</div>
+                        <div className="text-xs text-slate-400 mt-1 font-medium">{formatDateTime(apt.datetime).time}</div>
                       </td>
-                      <td className="px-6 py-5"><span className="inline-block px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold border border-slate-200">{apt.service}</span></td>
-                      <td className="px-6 py-5"><SpecialistBadge name={apt.specialist} /></td>
-                      <td className="px-6 py-5"><StatusBadge status={apt.status} /></td>
-                      <td className="px-6 py-5 text-center"><OriginIcon origin={apt.origin} /></td>
-                      <td className="px-6 py-5 text-center">
+                      <td className="px-6 py-6"><span className="inline-block px-3 py-1.5 rounded-lg bg-slate-50 text-slate-600 text-[11px] font-bold border border-slate-100 uppercase tracking-tight">{apt.service}</span></td>
+                      <td className="px-6 py-6"><SpecialistBadge name={apt.specialist} /></td>
+                      <td className="px-6 py-6"><StatusBadge status={apt.status} /></td>
+                      <td className="px-6 py-6 text-center"><OriginIcon origin={apt.origin} /></td>
+                      <td className="px-6 py-6 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <button onClick={() => openModal(apt)} title="Editar" className="p-2 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 transition"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg></button>
                           {['CANCELADA', 'Cancelada'].includes(apt.status) ? (
