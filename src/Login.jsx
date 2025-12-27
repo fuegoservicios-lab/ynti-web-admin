@@ -8,14 +8,14 @@ export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(import.meta.env.VITE_ADMIN_EMAIL || '');
   const [password, setPassword] = useState(import.meta.env.VITE_ADMIN_PASSWORD || '');
-  
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [rememberMe, setRememberMe] = useState(true);
 
   const [logoOk, setLogoOk] = useState(true);
-  const LOGO_SRC = "/logo-ynti.png"; 
+  const LOGO_SRC = "/logo-ynti.png";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ export default function Login() {
     // CORRECCIÓN 1: 'bg-gradient-to-br' -> 'bg-linear-to-br'
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-brand-50 flex items-center justify-center p-4 font-sans">
       <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 animate-in fade-in zoom-in duration-300">
-        
+
         {/* Header */}
         {/* CORRECCIÓN 2: 'bg-gradient-to-r' -> 'bg-linear-to-r' */}
         <div className="bg-linear-to-r from-brand-600 to-brand-700 p-8 text-center relative overflow-hidden">
@@ -53,18 +53,18 @@ export default function Login() {
             {logoOk ? (
               <img
                 src={LOGO_SRC}
-                alt="Ynti Eusebio"
+                alt="Prometheus Regenerative Lab"
                 className="w-full h-full object-contain scale-[1.75]"
                 onError={() => setLogoOk(false)}
               />
             ) : (
               <div className="w-full h-full rounded-2xl bg-brand-600 text-white flex items-center justify-center font-extrabold text-3xl tracking-tight">
-                YE
+                PRL
               </div>
             )}
           </div>
 
-          <h2 className="text-3xl font-bold text-white relative z-10 tracking-tight">Ynti Eusebio</h2>
+          <h2 className="text-2xl font-bold text-white relative z-10 tracking-tight">Prometheus Regenerative Lab</h2>
           <p className="text-brand-100 text-sm font-medium relative z-10 mt-1">
             Panel de Administración
           </p>

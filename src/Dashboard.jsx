@@ -6,7 +6,7 @@ import DoctorsPanel from "./DoctorsPanel";
 
 // --- CONFIGURACIÓN VISUAL (Ynti Brand) ---
 const BRAND = {
-  name: "Ynti Eusebio",
+  name: "Prometheus Regenerative Lab",
   colors: {
     bg: "bg-[#F8F9FC]",
     primary: "bg-brand-600",
@@ -82,7 +82,7 @@ function normalizeAppointment(a) {
 
 function getStatusBorderColor(status) {
   const s = String(status || "").toUpperCase();
-  if (["AGENDADA", "CONFIRMADA"].includes(s)) return "bg-[#00695C]";
+  if (["AGENDADA", "CONFIRMADA"].includes(s)) return "bg-brand-600";
   if (["PENDIENTE", "REPROGRAMADA"].includes(s)) return "bg-amber-500";
   if (["CANCELADA", "NO ASISTIÓ"].includes(s)) return "bg-rose-500";
   if (["COMPLETADA", "FINALIZADA"].includes(s)) return "bg-blue-500";
@@ -98,7 +98,7 @@ function StatusBadge({ status }) {
 
 
   if (["AGENDADA", "CONFIRMADA"].includes(s)) {
-    return <span className={`${baseClasses} bg-teal-50 text-teal-700 border-teal-200`}>{status}</span>;
+    return <span className={`${baseClasses} bg-brand-50 text-brand-700 border-brand-200`}>{status}</span>;
   }
   if (["PENDIENTE", "REPROGRAMADA"].includes(s)) {
     return <span className={`${baseClasses} bg-amber-50 text-amber-700 border-amber-200/60`}>{status}</span>;
@@ -422,7 +422,7 @@ export default function Dashboard() {
         <div className="max-w-[1600px] mx-auto flex justify-between items-center gap-4">
           {/* Logo Area */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ir al Inicio">
-            <img src="/logo-ynti.png" alt="Logo" className="w-10 h-10 md:w-12 md:h-12 object-contain" />
+            <img src="/logo-ynti.png" alt="Logo" className="w-14 h-14 md:w-16 md:h-16 object-contain" />
             <div className="leading-none">
               <h1 className="text-[19px] md:text-2xl font-bold text-slate-900 tracking-tight">Panel Admin</h1>
             </div>
@@ -469,7 +469,7 @@ export default function Dashboard() {
                 }
               `}
             >
-              <div className={`w-2 h-2 rounded-full ${botIsOn ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></div>
+              <div className={`w-2 h-2 rounded-full ${botIsOn ? 'bg-brand-500 animate-pulse' : 'bg-slate-400'}`}></div>
               {botIsOn ? "IA ON" : "IA OFF"}
             </button>
 

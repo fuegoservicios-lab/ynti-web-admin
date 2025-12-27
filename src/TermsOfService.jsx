@@ -13,13 +13,13 @@ export default function TermsOfService() {
                 <p className="text-slate-400 mb-8">Última actualización: {new Date().getFullYear()}</p>
 
                 <div className="prose prose-slate prose-headings:font-bold prose-headings:text-slate-800 prose-p:text-slate-600 max-w-none">
-                    <p>Bienvenido al sitio web de <strong>Ynti Eusebio Medicina Regenerativa</strong>. Al acceder y utilizar este sitio, aceptas cumplir con los siguientes términos y condiciones.</p>
+                    <p>Bienvenido al sitio web de <strong>Prometheus Regenerative Lab</strong>. Al acceder y utilizar este sitio, aceptas cumplir con los siguientes términos y condiciones.</p>
 
                     <h3>1. Uso del Sitio Web</h3>
                     <p>El contenido de este sitio web tiene fines informativos y educativos. No sustituye en ningún caso el consejo, diagnóstico o tratamiento médico profesional. Siempre debes consultar a un médico calificado para cualquier duda sobre tu salud.</p>
 
                     <h3>2. Propiedad Intelectual</h3>
-                    <p>Todo el contenido, diseños, logotipos y materiales presentados en este sitio son propiedad de Ynti Eusebio Medicina Regenerativa o cuentan con las licencias correspondientes. Queda prohibida su reproducción sin autorización expresa.</p>
+                    <p>Todo el contenido, diseños, logotipos y materiales presentados en este sitio son propiedad de Prometheus Regenerative Lab o cuentan con las licencias correspondientes. Queda prohibida su reproducción sin autorización expresa.</p>
 
                     <h3>3. Servicios Médicos</h3>
                     <p>La información sobre tratamientos y procedimientos es general. Los resultados pueden variar de un paciente a otro. La elegibilidad para ciertos tratamientos se determinará exclusivamente mediante una consulta médica personalizada.</p>

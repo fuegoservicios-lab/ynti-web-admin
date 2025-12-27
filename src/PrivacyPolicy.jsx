@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
                 <p className="text-slate-400 mb-8">Última actualización: {new Date().getFullYear()}</p>
 
                 <div className="prose prose-slate prose-headings:font-bold prose-headings:text-slate-800 prose-p:text-slate-600 max-w-none">
-                    <p>En <strong>Ynti Eusebio Medicina Regenerativa</strong>, la confidencialidad y "seguridad" de tus datos personales son una prioridad absoluta. Esta Política de Privacidad describe cómo recopilamos, utilizamos y protegemos la información que nos proporcionas.</p>
+                    <p>En <strong>Prometheus Regenerative Lab</strong>, la confidencialidad y "seguridad" de tus datos personales son una prioridad absoluta. Esta Política de Privacidad describe cómo recopilamos, utilizamos y protegemos la información que nos proporcionas.</p>
 
                     <h3>1. Información que Recopilamos</h3>
                     <p>Podemos recopilar información personal que nos proporcionas voluntariamente al agendar una cita, suscribirte a nuestro boletín o completar formularios en nuestro sitio web. Esto puede incluir:</p>

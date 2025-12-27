@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight, MapPin, Phone, MessageCircle } from "lucide-react";
 import { SERVICES } from "./data/services";
 
 
@@ -29,10 +29,10 @@ export default function Home() {
                     <div className="flex justify-between items-center h-20 md:h-24">
                         {/* Logo más grande aún, responsive */}
                         <div className="flex items-center gap-3 md:gap-4 group cursor-pointer">
-                            <img src="/logo-ynti.png" alt="Ynti Eusebio" className="h-20 md:h-28 w-auto transform transition-transform duration-500 group-hover:scale-105" />
+                            <img src="/logo-ynti.png" alt="Ynti Eusebio" className="h-24 md:h-32 w-auto transform transition-transform duration-500 group-hover:scale-105" />
                             <div className="flex flex-col">
-                                <span className="text-xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-none group-hover:text-brand-700 transition-colors">Ynti Eusebio</span>
-                                <span className="text-[10px] md:text-xs font-semibold text-brand-600 tracking-[0.2em] uppercase mt-0.5">Medicina Regenerativa</span>
+                                <span className="text-xl md:text-3xl font-extrabold text-slate-800 tracking-tight leading-none group-hover:text-brand-700 transition-colors">Prometheus</span>
+                                <span className="hidden sm:block text-[10px] md:text-xs font-semibold text-brand-600 tracking-[0.2em] uppercase mt-0.5">Regenerative Lab</span>
                             </div>
                         </div>
 
@@ -49,7 +49,7 @@ export default function Home() {
                             {session ? (
                                 <Link
                                     to="/dashboard"
-                                    className="px-5 py-2.5 rounded-full border border-brand-200 bg-brand-50 text-brand-700 font-bold hover:bg-brand-100 hover:border-brand-300 transition-all text-sm active:scale-95 flex items-center gap-2"
+                                    className="px-3 py-1.5 md:px-5 md:py-2.5 rounded-full border border-brand-200 bg-brand-50 text-brand-700 font-bold hover:bg-brand-100 hover:border-brand-300 transition-all text-[11px] md:text-sm active:scale-95 flex items-center gap-1 md:gap-2 shadow-sm order-first sm:order-none"
                                 >
                                     <span className="relative flex h-2 w-2">
                                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
@@ -125,7 +125,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-20">
                         <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-                            Soluciones Integrales
+                            Servicios
                         </h2>
                         <div className="w-24 h-1.5 bg-brand-500 mx-auto mt-6 rounded-full opacity-80"></div>
                     </div>
@@ -172,7 +172,7 @@ export default function Home() {
                                 <span className="text-brand-400">al Servicio de tu Salud</span>
                             </h2>
                             <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
-                                En Ynti Eusebio combinamos la ciencia médica más avanzada con un enfoque profundamente humano. Cada tratamiento es único, diseñado específicamente para optimizar la capacidad regenerativa de tu propio cuerpo.
+                                En Prometheus Regenerative Lab combinamos la ciencia médica más avanzada con un enfoque profundamente humano. Cada tratamiento es único, diseñado específicamente para optimizar la capacidad regenerativa de tu propio cuerpo.
                             </p>
                             <ul className="space-y-4 text-left inline-block">
                                 {[
@@ -207,24 +207,37 @@ export default function Home() {
                 </div>
             </section>
 
+
             {/* --- FOOTER --- */}
-            <footer className="py-12 bg-white border-t border-slate-100">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="flex flex-col items-center md:items-start gap-2">
-                            <span className="text-lg font-bold text-slate-700">Ynti Eusebio</span>
-                            <p className="text-xs text-slate-400">Medicina Regenerativa de Precisión</p>
+            <footer className="py-16 bg-white border-t border-slate-100">
+                <div className="max-w-4xl mx-auto px-6 text-center">
+
+
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Prometheus Regenerative Lab</h2>
+                    <p className="text-slate-500 mb-8 max-w-lg mx-auto leading-relaxed">
+                        Medicina regenerativa de precisión y terapias biológicas avanzadas para recuperar tu vitalidad desde el origen.
+                    </p>
+
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-10 text-slate-600 font-medium">
+                        <div className="flex items-center gap-2 group cursor-pointer hover:text-brand-600 transition-colors">
+                            <div className="p-2 bg-slate-50 rounded-full group-hover:bg-brand-50 transition-colors">
+                                <MapPin className="w-5 h-5" />
+                            </div>
+                            <span className="text-sm">C. Toledo 2, San Pedro de Macorís 21000</span>
                         </div>
 
-                        <div className="text-sm text-slate-500 flex gap-6">
-                            <Link to="/privacidad" className="hover:text-brand-600 transition-colors">Privacidad</Link>
-                            <Link to="/terminos" className="hover:text-brand-600 transition-colors">Términos</Link>
-                            <a href="https://wa.me/18093993181" target="_blank" rel="noopener noreferrer" className="hover:text-brand-600 transition-colors">Contacto</a>
-                        </div>
+                        <a href="https://wa.me/18093993181" className="flex items-center gap-2 group cursor-pointer hover:text-brand-600 transition-colors">
+                            <div className="p-2 bg-slate-50 rounded-full group-hover:bg-brand-50 transition-colors">
+                                <Phone className="w-5 h-5" />
+                            </div>
+                            <span className="text-sm">+1 (809) 399-3181</span>
+                        </a>
+                    </div>
 
-                        <p className="text-xs text-slate-400">
-                            © {new Date().getFullYear()} Todos los derechos reservados.
-                        </p>
+                    <div className="flex items-center justify-center gap-8 border-t border-slate-100 pt-8">
+                        <Link to="/privacidad" className="text-xs text-slate-400 hover:text-brand-600 transition-colors uppercase tracking-wider font-semibold">Privacidad</Link>
+                        <Link to="/terminos" className="text-xs text-slate-400 hover:text-brand-600 transition-colors uppercase tracking-wider font-semibold">Términos</Link>
+                        <span className="text-xs text-slate-400 uppercase tracking-wider">© {new Date().getFullYear()} Prometheus</span>
                     </div>
                 </div>
             </footer>
