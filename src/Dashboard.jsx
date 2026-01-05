@@ -82,7 +82,7 @@ function normalizeAppointment(a) {
 
 function getStatusBorderColor(status) {
   const s = String(status || "").toUpperCase();
-  if (["AGENDADA", "CONFIRMADA"].includes(s)) return "bg-brand-600";
+  if (["AGENDADA", "CONFIRMADA"].includes(s)) return "bg-emerald-600";
   if (["PENDIENTE", "REPROGRAMADA"].includes(s)) return "bg-amber-500";
   if (["CANCELADA", "NO ASISTIÓ"].includes(s)) return "bg-rose-500";
   if (["COMPLETADA", "FINALIZADA"].includes(s)) return "bg-blue-500";
@@ -98,7 +98,7 @@ function StatusBadge({ status }) {
 
 
   if (["AGENDADA", "CONFIRMADA"].includes(s)) {
-    return <span className={`${baseClasses} bg-brand-50 text-brand-700 border-brand-200`}>{status}</span>;
+    return <span className={`${baseClasses} bg-emerald-50 text-emerald-700 border-emerald-200`}>{status}</span>;
   }
   if (["PENDIENTE", "REPROGRAMADA"].includes(s)) {
     return <span className={`${baseClasses} bg-amber-50 text-amber-700 border-amber-200/60`}>{status}</span>;
@@ -418,68 +418,67 @@ export default function Dashboard() {
 
       {/* --- HEADER --- */}
       {/* --- HEADER --- */}
-      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 px-4 py-4 shadow-sm">
+      <header className="sticky top-0 z-30 glass border-b-0 px-4 py-4 shadow-sm">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center gap-4">
           {/* Logo Area */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ir al Inicio">
-            <img src="/logo-ynti.png" alt="Logo" className="w-14 h-14 md:w-16 md:h-16 object-contain" />
+            <img src="/logo-ynti.png" alt="Logo" className="hidden md:block w-14 h-14 md:w-16 md:h-16 object-contain" />
             <div className="leading-none">
-              <h1 className="text-[19px] md:text-2xl font-bold text-slate-900 tracking-tight">Panel Admin</h1>
+              <h1 className="text-[19px] md:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-700 to-brand-500 tracking-tight">Panel Admin</h1>
             </div>
           </Link>
 
           {/* Actions Area */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
 
             {/* Reset Button */}
             <button
               onClick={handleResetMemory}
               disabled={resettingMemory}
               className={`
-                relative flex items-center justify-center gap-1.5 px-3 py-1.5 md:px-4 md:py-2 rounded-xl 
-                border transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed
+                w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-90 disabled:opacity-50
                 ${resettingMemory
-                  ? 'bg-rose-50 border-rose-100 text-rose-500' // Loading state style
-                  : 'bg-rose-50 border-rose-100 text-rose-600 hover:bg-rose-100 hover:border-rose-200' // Idel style
+                  ? 'bg-slate-100 text-slate-400'
+                  : 'glass-card text-slate-500 hover:text-brand-600 hover:shadow-md'
                 }
               `}
+              title="Reset Memoria IA"
             >
-              <div className="flex items-center gap-1.5">
-                {resettingMemory ? (
-                  <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                )}
-                {/* Text: Hidden on very small screens if needed, or shown as requested. Screenshot shows text "Reset" */}
-                <span className="text-xs md:text-sm font-bold">{resettingMemory ? '...' : 'Reset'}</span>
-              </div>
+              {resettingMemory ? (
+                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              )}
             </button>
 
-            {/* AI Toggle Button */}
+            {/* AI Toggle - Premium Switch */}
             <button
               onClick={handleToggleBot}
               className={`
-                flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-xl border text-xs md:text-sm font-bold transition-all active:scale-95
+                h-10 px-4 rounded-xl flex items-center gap-2.5 text-sm font-semibold transition-all active:scale-95
                 ${botIsOn
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                  : 'bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100'
+                  ? 'bg-gradient-to-r from-brand-500 via-brand-400 to-cyan-400 text-white shadow-lg shadow-brand-500/25'
+                  : 'glass-card text-slate-500 hover:shadow-md'
                 }
               `}
             >
-              <div className={`w-2 h-2 rounded-full ${botIsOn ? 'bg-brand-500 animate-pulse' : 'bg-slate-400'}`}></div>
-              {botIsOn ? "IA ON" : "IA OFF"}
+              <div className={`w-2.5 h-2.5 rounded-full transition-all ${botIsOn ? 'bg-white shadow-[0_0_10px_3px_rgba(255,255,255,0.5)]' : 'bg-slate-400'}`}></div>
+              <span className="tracking-wide">IA</span>
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${botIsOn ? 'bg-white/20' : 'bg-slate-200/60 text-slate-500'}`}>
+                {botIsOn ? "ON" : "OFF"}
+              </span>
             </button>
 
             {/* Logout Button */}
             <button
               onClick={onLogout}
-              className="p-2 rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 active:scale-95 transition-all"
+              className="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-slate-500 hover:text-rose-500 hover:shadow-md active:scale-90 transition-all"
               title="Cerrar Sesión"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
             </button>
 
           </div>
@@ -494,10 +493,10 @@ export default function Dashboard() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              <input type="text" placeholder="Buscar por paciente..." className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-slate-200 bg-white hover:border-slate-300 focus:ring-4 focus:ring-slate-100 focus:border-brand-500 outline-none transition-all shadow-sm" value={query} onChange={e => setQuery(e.target.value)} />
+              <input type="text" placeholder="Buscar por paciente..." className="w-full pl-12 pr-4 py-3.5 rounded-full glass-input text-slate-700 placeholder:text-slate-400 outline-none" value={query} onChange={e => setQuery(e.target.value)} />
             </div>
 
-            <select className="px-5 py-3.5 rounded-2xl border border-slate-200 bg-white text-slate-700 outline-none hover:border-slate-300 focus:ring-4 focus:ring-slate-100 focus:border-brand-500 cursor-pointer shadow-sm md:w-56 font-medium" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+            <select className="px-5 py-3.5 rounded-full glass-input text-slate-700 outline-none cursor-pointer md:w-56 font-medium" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
               <option value="ALL">Todos los estados</option>
               {/* Opción 'Agendada' y otras... */}
               <option value="AGENDADA">Agendada</option>
@@ -506,12 +505,12 @@ export default function Dashboard() {
             </select>
           </div>
 
-          <div className="grid grid-cols-2 md:flex md:justify-end gap-3">
-            <button onClick={() => setIsDoctorsOpen(true)} className="flex justify-center items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-50 transition shadow-sm">
-              <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <div className="flex md:justify-end gap-3">
+            <button onClick={() => setIsDoctorsOpen(true)} className="flex-1 md:flex-none flex justify-center items-center gap-2.5 px-5 py-3 rounded-2xl glass-card hover:bg-white/90 transition-all active:scale-[0.98] text-slate-700 font-semibold">
+              <svg className="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
               Equipo
             </button>
-            <PrimaryButton onClick={() => openModal()} className="flex justify-center items-center gap-2 w-full md:w-auto">
+            <PrimaryButton onClick={() => openModal()} className="hidden md:flex justify-center items-center gap-2 w-full md:w-auto">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
               Nueva Cita
             </PrimaryButton>
@@ -523,7 +522,7 @@ export default function Dashboard() {
           <div className="text-center py-20 text-slate-400 animate-pulse">Cargando citas...</div>
         ) : (
           <>
-            <div className="hidden md:block bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+            <div className="hidden md:block glass-card rounded-[2.5rem] overflow-hidden">
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#F8FAFC] border-b border-slate-100 text-[11px] uppercase text-slate-400 font-bold tracking-widest">
                   <tr>
@@ -580,39 +579,62 @@ export default function Dashboard() {
               </table>
             </div>
 
-            <div className="md:hidden space-y-4">
+            <div className="md:hidden space-y-5 pb-24">
               {filteredAppointments.map(apt => (
-                <div key={apt.id || Math.random()} className="relative bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                  <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${getStatusBorderColor(apt.status)}`}></div>
-                  <div className="p-5 pl-7">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">{initials(apt.patient)}</div>
-                        <div>
-                          <h3 className="font-bold text-slate-800 text-lg">{apt.patient}</h3>
-                          <StatusBadge status={apt.status} />
-                        </div>
+                <div key={apt.id || Math.random()} className="glass-card rounded-[1.75rem] p-6 hover:shadow-lg hover:shadow-brand-500/5 transition-shadow">
+                  {/* Header Card */}
+                  <div className="flex justify-between items-start mb-5 gap-3">
+                    <div className="flex items-center gap-4 flex-1 min-w-0">
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-100 to-brand-50 text-brand-600 shadow-sm flex items-center justify-center font-bold text-lg shrink-0">
+                        {initials(apt.patient)}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-slate-900 text-lg truncate leading-tight mb-1.5">{apt.patient}</h3>
+                        <StatusBadge status={apt.status} />
+                      </div>
+                    </div>
+                    <div className="shrink-0 pt-1">
                       <OriginIcon origin={apt.origin} />
                     </div>
-                    <div className="bg-[#F8FAFC] rounded-xl p-4 space-y-3 mb-5 border border-slate-100">
-                      <MobileInfoRow icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>} text={formatDateTime(apt.datetime).date} />
-                      <MobileInfoRow icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>} text={formatDateTime(apt.datetime).time} />
-                      <MobileInfoRow icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>} text={apt.service} />
-                      <MobileInfoRow icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>} text={apt.specialist} subtext="Especialista" />
-                      <MobileInfoRow icon={<svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>} text={formatPhone(apt.phone)} />
+                  </div>
+
+                  {/* Info Body */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="col-span-1 flex items-center gap-3 text-slate-700 bg-white/60 p-3.5 rounded-2xl">
+                      <svg className="w-5 h-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                      <span className="text-sm font-semibold">{formatDateTime(apt.datetime).date}</span>
                     </div>
-                    <div className="flex gap-3">
-                      <button onClick={() => openModal(apt)} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 transition"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg> Editar</button>
-                      {['CANCELADA', 'Cancelada'].includes(apt.status) ? (
-                        <button onClick={() => handleDelete(apt.id)} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-rose-200 text-rose-600 font-bold hover:bg-rose-50 transition">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                          Eliminar
-                        </button>
-                      ) : (
-                        <button onClick={() => handleCancel(apt.id)} className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border border-amber-400 text-amber-600 font-bold hover:bg-amber-50 transition"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg> Cancelar</button>
-                      )}
+                    <div className="col-span-1 flex items-center gap-3 text-slate-700 bg-white/60 p-3.5 rounded-2xl">
+                      <svg className="w-5 h-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <span className="text-sm font-semibold">{formatDateTime(apt.datetime).time}</span>
                     </div>
+                    <div className="col-span-2 flex items-center gap-3 text-slate-600 px-1 pt-2">
+                      <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                      <span className="text-sm font-medium truncate">{apt.service}</span>
+                    </div>
+                    <div className="col-span-2 flex items-center gap-3 text-slate-600 px-1">
+                      <svg className="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                      <span className="text-sm font-medium">{apt.specialist}</span>
+                    </div>
+                  </div>
+
+                  {/* Actions Footer */}
+                  <div className="flex gap-3 pt-2">
+                    <button onClick={() => openModal(apt)} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-slate-50 to-white text-slate-700 font-semibold text-sm hover:shadow-md hover:shadow-slate-200/50 transition-all active:scale-[0.97] border border-slate-100/80">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                      Editar
+                    </button>
+                    {['CANCELADA', 'Cancelada'].includes(apt.status) ? (
+                      <button onClick={() => setConfirmModal({ isOpen: true, title: "Eliminar Cita", message: "¿Eliminar permanentemente?", onConfirm: () => handleDelete(apt.id), isDanger: true })} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-rose-50 to-rose-100/80 text-rose-600 font-semibold text-sm hover:shadow-md hover:shadow-rose-200/50 transition-all active:scale-[0.97] border border-rose-100">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Eliminar
+                      </button>
+                    ) : (
+                      <button onClick={() => setConfirmModal({ isOpen: true, title: "Cancelar Cita", message: "¿Cancelar esta cita?", onConfirm: () => handleCancel(apt.id), isDanger: true })} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-white/80 text-slate-500 font-semibold text-sm border border-slate-100 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100 transition-all active:scale-[0.97]">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Cancelar
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -743,6 +765,17 @@ export default function Dashboard() {
       {isDoctorsOpen && (
         <DoctorsPanel onClose={() => setIsDoctorsOpen(false)} />
       )}
+
+      {/* Floating Action Button for Mobile - Premium */}
+      <button
+        onClick={() => openModal()}
+        className="md:hidden fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-br from-brand-400 to-brand-600 text-white rounded-2xl fab-glow flex items-center justify-center z-40 active:scale-90 transition-transform"
+        title="Nueva Cita"
+      >
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"></path>
+        </svg>
+      </button>
 
     </div>
   );
