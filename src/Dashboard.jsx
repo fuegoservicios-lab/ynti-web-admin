@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import DoctorsPanel from "./DoctorsPanel";
 
-// --- CONFIGURACIÓN VISUAL (Ynti Brand) ---
+// --- CONFIGURACIÓN VISUAL (Prometheus / Ynti Brand) ---
 const BRAND = {
   name: "Prometheus Regenerative Lab",
   colors: {
@@ -80,22 +80,11 @@ function normalizeAppointment(a) {
   return { id, patient, phone, datetime: dt, service, specialist, status, origin, notes, raw: a };
 }
 
-function getStatusBorderColor(status) {
-  const s = String(status || "").toUpperCase();
-  if (["AGENDADA", "CONFIRMADA"].includes(s)) return "bg-emerald-600";
-  if (["PENDIENTE", "REPROGRAMADA"].includes(s)) return "bg-amber-500";
-  if (["CANCELADA", "NO ASISTIÓ"].includes(s)) return "bg-rose-500";
-  if (["COMPLETADA", "FINALIZADA"].includes(s)) return "bg-blue-500";
-  return "bg-slate-400";
-}
-
 // --- COMPONENTES UI ---
 
 function StatusBadge({ status }) {
   const s = String(status || "").toUpperCase();
-
   const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide border";
-
 
   if (["AGENDADA", "CONFIRMADA"].includes(s)) {
     return <span className={`${baseClasses} bg-emerald-50 text-emerald-700 border-emerald-200`}>{status}</span>;
@@ -146,32 +135,6 @@ function SpecialistBadge({ name }) {
       <span className="text-sm font-medium">{name}</span>
     </div>
   )
-}
-
-function MobileInfoRow({ icon, text, subtext }) {
-  return (
-    <div className="flex items-start gap-3">
-      <div className="mt-0.5 text-slate-400 shrink-0">
-        {icon}
-      </div>
-      <div className="text-sm font-medium text-slate-700">
-        {text}
-        {subtext && <span className="block text-xs text-slate-400 font-normal">{subtext}</span>}
-      </div>
-    </div>
-  )
-}
-
-function IconButton({ title, onClick, children, danger }) {
-  return (
-    <button
-      onClick={onClick}
-      title={title}
-      className={`p-2 rounded-xl border transition-all active:scale-95 ${danger ? 'border-rose-200 hover:bg-rose-50 text-rose-600' : 'border-slate-200 hover:bg-slate-50 text-slate-600'}`}
-    >
-      {children}
-    </button>
-  );
 }
 
 function PrimaryButton({ children, onClick, disabled, className }) {
@@ -242,7 +205,6 @@ export default function Dashboard() {
       normalized.sort((a, b) => new Date(b.datetime) - new Date(a.datetime));
 
       setAppointments(normalized);
-      if (json.botActive !== undefined) setBotIsOn(json.botActive);
     } catch (error) {
       console.debug("Polling silencioso:", error.message);
     }
@@ -268,6 +230,87 @@ export default function Dashboard() {
     const interval = setInterval(fetchAppointments, 15000);
     return () => clearInterval(interval);
   }, [fetchAppointments, fetchDoctorsList]);
+
+  // --- EFECTO: REALTIME BOT STATE (Supabase - FIX PERSISTENCIA) ---
+  useEffect(() => {
+    // 1. Carga inicial desde la fila correcta (key='bot_master_switch')
+    const fetchBotState = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('global_config')
+          .select('is_active')
+          .eq('key', 'bot_master_switch') // CLAVE: Usamos 'key' en lugar de 'id'
+          .maybeSingle();
+
+        if (error) console.error("Error fetching bot state:", error);
+
+        if (data) {
+          console.log("Estado inicial IA cargado:", data.is_active);
+          setBotIsOn(data.is_active);
+        } else {
+          // Si no existe, creamos la fila por seguridad
+          console.warn("Configuración no encontrada, creando default...");
+          await supabase.from('global_config').insert([{ key: 'bot_master_switch', is_active: false }]);
+        }
+      } catch (err) {
+        console.error("Error inicializando bot state:", err);
+      }
+    };
+    fetchBotState();
+
+    // 2. Suscripción a cambios en tiempo real
+    const channel = supabase
+      .channel('global_bot_config')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'global_config',
+          filter: "key=eq.bot_master_switch" // CLAVE: Escuchamos solo esta fila
+        },
+        (payload) => {
+          if (payload.new && typeof payload.new.is_active === 'boolean') {
+            console.log("Cambio remoto recibido:", payload.new.is_active);
+            setBotIsOn(payload.new.is_active);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const handleToggleBot = async () => {
+    // 1. Actualización Optimista UI
+    const newState = !botIsOn;
+    setBotIsOn(newState);
+
+    try {
+      // 2. Guardar en Supabase (Source of Truth)
+      const { error } = await supabase
+        .from('global_config')
+        .update({ is_active: newState })
+        .eq('key', 'bot_master_switch'); // CLAVE: Actualizamos por key
+
+      if (error) throw error;
+
+      // 3. Notificar a n8n (Opcional, pero mantenemos el webhook)
+      fetch(API.toggleBot, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: newState })
+      }).catch(err => console.error("Error notificando webhook n8n:", err));
+
+    } catch (e) {
+      console.error("Error actualizando estado IA:", e);
+      // Revertir si falla
+      setBotIsOn(!newState);
+      alert("No se pudo sincronizar el estado. Revisa tu conexión.");
+    }
+  };
 
   const filteredAppointments = useMemo(() => {
     return appointments.filter(apt => {
@@ -301,15 +344,11 @@ export default function Dashboard() {
     }
   };
 
-  // --- FUNCIÓN DE GUARDADO (CORREGIDA: ID EN DATA & FORMATO STATUS) ---
   const handleSave = () => {
     const action = editing ? "update" : "create";
-
-    // 1. Calcular hora fin (30 mins después)
     const startDate = new Date(form.datetime);
     const endDate = new Date(startDate.getTime() + 30 * 60000);
 
-    // 2. Sanitizar estado para Airtable (Title Case obligatorio)
     let cleanStatus = form.status;
     const statusMap = {
       "AGENDADA": "Agendada",
@@ -319,20 +358,17 @@ export default function Dashboard() {
       "COMPLETADA": "Completada"
     };
 
-    // Convertir mayúsculas a TitleCase
     if (statusMap[String(cleanStatus).toUpperCase()]) {
       cleanStatus = statusMap[String(cleanStatus).toUpperCase()];
     }
 
-    // Si estamos editando una cita que estaba "Agendada" y guardamos cambios, pasa a "Reprogramada"
     if (editing && (String(editing.status).toUpperCase() === 'AGENDADA')) {
       cleanStatus = "Reprogramada";
     }
 
-    // 3. Empaquetar datos (ID va DENTRO de data)
     const payload = {
       data: {
-        id: editing?.id, // <--- ID AQUÍ PARA QUE n8n LO LEA
+        id: editing?.id,
         title: form.patient,
         phone: form.phone,
         start: startDate.toISOString(),
@@ -348,17 +384,13 @@ export default function Dashboard() {
     handleAction(action, payload);
   };
 
-  // --- FUNCIÓN CANCELAR ---
   const handleCancel = (id) => {
-    // ID dentro de data también aquí
     handleAction("delete", {
       data: { id, eventId: appointments.find(a => a.id === id)?.raw?.resource?.eventId }
     });
   };
 
-  // --- FUNCIÓN ELIMINAR ---
   const handleDelete = (id) => {
-    // ID dentro de data también aquí
     handleAction("hard_delete", {
       data: { id }
     });
@@ -373,23 +405,6 @@ export default function Dashboard() {
     }
   };
 
-  const handleToggleBot = async () => {
-    const previousState = botIsOn;
-    const newState = !previousState;
-    setBotIsOn(newState);
-    try {
-      const res = await fetch(API.toggleBot, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ active: newState })
-      });
-      if (!res.ok) throw new Error("Error de conexión");
-    } catch (e) {
-      alert("No se pudo conectar con el servidor. Verifica n8n.");
-      setBotIsOn(previousState);
-    }
-  };
-
   const openModal = (apt = null) => {
     if (apt) {
       setEditing(apt);
@@ -397,7 +412,6 @@ export default function Dashboard() {
         patient: apt.patient, phone: apt.phone,
         datetime: apt.datetime ? new Date(apt.datetime).toISOString().slice(0, 16) : "",
         service: apt.service, specialist: apt.specialist,
-        // Status inicial (se limpiará al guardar)
         status: apt.status || "Agendada",
         origin: apt.origin, notes: apt.notes || ""
       });
@@ -417,10 +431,8 @@ export default function Dashboard() {
     <div className={`min-h-screen ${BRAND.colors.bg} font-sans pb-24 md:pb-0`}>
 
       {/* --- HEADER --- */}
-      {/* --- HEADER --- */}
       <header className="sticky top-0 z-30 glass border-b-0 px-4 py-4 shadow-sm">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center gap-4">
-          {/* Logo Area */}
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity" title="Ir al Inicio">
             <img src="/logo-ynti.png" alt="Logo" className="hidden md:block w-14 h-14 md:w-16 md:h-16 object-contain" />
             <div className="leading-none">
@@ -428,9 +440,7 @@ export default function Dashboard() {
             </div>
           </Link>
 
-          {/* Actions Area */}
           <div className="flex items-center gap-2">
-
             {/* Reset Button */}
             <button
               onClick={handleResetMemory}
@@ -454,7 +464,7 @@ export default function Dashboard() {
               )}
             </button>
 
-            {/* AI Toggle - Premium Switch */}
+            {/* AI Toggle - Connected to Global Config */}
             <button
               onClick={handleToggleBot}
               className={`
@@ -498,7 +508,6 @@ export default function Dashboard() {
 
             <select className="px-5 py-3.5 rounded-full glass-input text-slate-700 outline-none cursor-pointer md:w-56 font-medium" value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
               <option value="ALL">Todos los estados</option>
-              {/* Opción 'Agendada' y otras... */}
               <option value="AGENDADA">Agendada</option>
               <option value="PENDIENTE">Pendiente</option>
               <option value="CANCELADA">Cancelada</option>
