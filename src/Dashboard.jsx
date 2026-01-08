@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import DoctorsPanel from "./DoctorsPanel";
+import SessionsPanel from "./SessionsPanel"; // <--- NUEVO COMPONENTE IMPORTADO
 
 // --- CONFIGURACIÓN VISUAL (Prometheus / Ynti Brand) ---
 const BRAND = {
@@ -22,7 +23,7 @@ const API = {
   dashboardAction: "https://agente-de-citas-dental-space-n8n.ofcrls.easypanel.host/webhook/dashboard-action-Ynti",
 };
 
-// --- SERVICIOS MÉDICOS (ACTUALIZADO: Protocolos Regenerativos Avanzados) ---
+// --- SERVICIOS MÉDICOS ---
 const YNTI_SERVICES = [
   "Consulta de Valoración / Primera Vez",
   "Terapia Celular Placentaria",
@@ -80,7 +81,7 @@ function normalizeAppointment(a) {
   return { id, patient, phone, datetime: dt, service, specialist, status, origin, notes, raw: a };
 }
 
-// --- COMPONENTES UI (FUTURISTIC DARK) ---
+// --- COMPONENTES UI ---
 
 function StatusBadge({ status }) {
   const s = String(status || "").toUpperCase();
@@ -176,7 +177,10 @@ export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [botIsOn, setBotIsOn] = useState(false);
 
+  // ESTADOS DE LOS PANELES LATERALES
   const [isDoctorsOpen, setIsDoctorsOpen] = useState(false);
+  const [isSessionsOpen, setIsSessionsOpen] = useState(false); // <--- ESTADO NUEVO
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: "", message: "", onConfirm: null, isDanger: false });
@@ -227,24 +231,21 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [fetchAppointments, fetchDoctorsList]);
 
-  // --- EFECTO: REALTIME BOT STATE (Supabase - FIX PERSISTENCIA) ---
+  // --- EFECTO: REALTIME BOT STATE ---
   useEffect(() => {
-    // 1. Carga inicial desde la fila correcta (key='bot_master_switch')
     const fetchBotState = async () => {
       try {
         const { data, error } = await supabase
           .from('global_config')
           .select('is_active')
-          .eq('key', 'bot_master_switch') // CLAVE: Usamos 'key' en lugar de 'id'
+          .eq('key', 'bot_master_switch')
           .maybeSingle();
 
         if (error) console.error("Error fetching bot state:", error);
 
         if (data) {
-          console.log("Estado inicial IA cargado:", data.is_active);
           setBotIsOn(data.is_active);
         } else {
-          // Si no existe, creamos la fila por seguridad
           console.warn("Configuración no encontrada, creando default...");
           await supabase.from('global_config').insert([{ key: 'bot_master_switch', is_active: false }]);
         }
@@ -254,7 +255,6 @@ export default function Dashboard() {
     };
     fetchBotState();
 
-    // 2. Suscripción a cambios en tiempo real
     const channel = supabase
       .channel('global_bot_config')
       .on(
@@ -263,11 +263,10 @@ export default function Dashboard() {
           event: 'UPDATE',
           schema: 'public',
           table: 'global_config',
-          filter: "key=eq.bot_master_switch" // CLAVE: Escuchamos solo esta fila
+          filter: "key=eq.bot_master_switch"
         },
         (payload) => {
           if (payload.new && typeof payload.new.is_active === 'boolean') {
-            console.log("Cambio remoto recibido:", payload.new.is_active);
             setBotIsOn(payload.new.is_active);
           }
         }
@@ -280,20 +279,17 @@ export default function Dashboard() {
   }, []);
 
   const handleToggleBot = async () => {
-    // 1. Actualización Optimista UI
     const newState = !botIsOn;
     setBotIsOn(newState);
 
     try {
-      // 2. Guardar en Supabase (Source of Truth)
       const { error } = await supabase
         .from('global_config')
         .update({ is_active: newState })
-        .eq('key', 'bot_master_switch'); // CLAVE: Actualizamos por key
+        .eq('key', 'bot_master_switch');
 
       if (error) throw error;
 
-      // 3. Notificar a n8n (Opcional, pero mantenemos el webhook)
       fetch(API.toggleBot, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -302,7 +298,6 @@ export default function Dashboard() {
 
     } catch (e) {
       console.error("Error actualizando estado IA:", e);
-      // Revertir si falla
       setBotIsOn(!newState);
       alert("No se pudo sincronizar el estado. Revisa tu conexión.");
     }
@@ -320,7 +315,6 @@ export default function Dashboard() {
   const handleAction = async (actionType, payloadData = {}) => {
     setLoading(true);
     try {
-      console.log("Enviando acción:", actionType, payloadData);
       const res = await fetch(API.dashboardAction, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -457,7 +451,7 @@ export default function Dashboard() {
               )}
             </button>
 
-            {/* AI Toggle - Connected to Global Config */}
+            {/* AI Toggle */}
             <button
               onClick={handleToggleBot}
               className={`
@@ -475,7 +469,7 @@ export default function Dashboard() {
               </span>
             </button>
 
-            {/* Logout Button */}
+            {/* Logout */}
             <button
               onClick={onLogout}
               className="w-10 h-10 rounded-xl bg-space-800 border border-white/5 flex items-center justify-center text-slate-400 hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/30 active:scale-90 transition-all"
@@ -523,6 +517,16 @@ export default function Dashboard() {
           </div>
 
           <div className="flex md:justify-end gap-3 pt-2 border-t border-white/5">
+
+            {/* NUEVO BOTÓN: CHATS ACTIVOS */}
+            <button
+              onClick={() => setIsSessionsOpen(true)}
+              className="flex-1 md:flex-none flex justify-center items-center gap-2.5 px-6 py-2.5 rounded-xl bg-space-800 border border-white/10 hover:bg-space-700 hover:border-cyan-neon/30 hover:text-cyan-neon transition-all active:scale-[0.98] text-slate-300 font-medium text-sm"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+              Chats Activos
+            </button>
+
             <button onClick={() => setIsDoctorsOpen(true)} className="flex-1 md:flex-none flex justify-center items-center gap-2.5 px-6 py-2.5 rounded-xl bg-space-800 border border-white/10 hover:bg-space-700 hover:border-white/20 transition-all active:scale-[0.98] text-slate-300 font-medium text-sm">
               <svg className="w-4 h-4 text-bio-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
               Directorio Médico
@@ -603,10 +607,8 @@ export default function Dashboard() {
             <div className="md:hidden space-y-4 pb-28">
               {filteredAppointments.map(apt => (
                 <div key={apt.id || Math.random()} className="glass-panel p-5 rounded-[2rem] border border-white/5 relative overflow-hidden group">
-                  {/* Subtle Accent Glow */}
                   <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-neon/5 blur-2xl rounded-full"></div>
 
-                  {/* Header Card */}
                   <div className="flex justify-between items-start mb-5 gap-3">
                     <div className="flex items-center gap-3">
                       <div className="w-11 h-11 rounded-2xl bg-space-950 text-cyan-neon border border-white/10 flex items-center justify-center font-bold font-heading text-sm shadow-inner group-hover:border-cyan-neon/30 transition-colors">
@@ -620,7 +622,6 @@ export default function Dashboard() {
                     <OriginIcon origin={apt.origin} />
                   </div>
 
-                  {/* Info Grid */}
                   <div className="grid grid-cols-2 gap-3 mb-6">
                     <div className="flex flex-col gap-1 p-3 rounded-2xl bg-white/5 border border-white/5">
                       <span className="text-[9px] uppercase tracking-widest text-slate-500 font-mono">Programación</span>
@@ -640,7 +641,6 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* Footer Actions */}
                   <div className="flex gap-2.5">
                     <button onClick={() => openModal(apt)} className="flex-1 py-3 rounded-xl bg-space-800 text-slate-300 font-bold text-[11px] uppercase tracking-widest border border-white/5 hover:bg-space-700 active:scale-95 transition-all">
                       Detalles
@@ -781,8 +781,14 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* MODAL DOCTORES */}
       {isDoctorsOpen && (
         <DoctorsPanel onClose={() => setIsDoctorsOpen(false)} />
+      )}
+
+      {/* MODAL GESTIÓN DE SESIONES (NUEVO) */}
+      {isSessionsOpen && (
+        <SessionsPanel onClose={() => setIsSessionsOpen(false)} />
       )}
 
       {/* Floating Action Button for Mobile - Premium */}
