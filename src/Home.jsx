@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
-import { ArrowRight, MapPin, Phone, Sparkles, Activity, ShieldCheck, Microscope } from "lucide-react";
+import { ArrowRight, MapPin, Phone, Sparkles, Activity, ShieldCheck, Microscope, Dna, Zap } from "lucide-react";
 import { SERVICES } from "./data/services";
 import BioNetworkBackground from "./components/BioNetworkBackground";
 
@@ -120,6 +120,65 @@ export default function Home() {
                                     <div className="text-[10px] md:text-xs text-slate-500 uppercase tracking-wider">{stat.label}</div>
                                 </div>
                             ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* --- REGENERATIVE MEDICINE INFO --- */}
+            <section className="py-32 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                        <div className="order-2 lg:order-1 relative">
+                            <div className="relative z-10 space-y-8">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-neon/10 border border-cyan-neon/30 text-cyan-neon text-xs font-bold uppercase tracking-wider">
+                                    <Dna className="w-4 h-4" />
+                                    <span>Ciencia Avanzada</span>
+                                </div>
+                                <h2 className="text-4xl md:text-5xl font-bold font-heading text-white leading-tight">
+                                    ¿Qué es la <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-neon to-blue-500">Medicina Regenerativa?</span>
+                                </h2>
+                                <p className="text-slate-300 text-lg leading-relaxed">
+                                    Es la rama de la medicina enfocada en <span className="text-white font-medium">reemplazar, diseñar o regenerar</span> células, tejidos u órganos humanos para restaurar una función normal.
+                                </p>
+                                <p className="text-slate-400 leading-relaxed">
+                                    A diferencia de los tratamientos tradicionales que solo gestionan los síntomas, nuestras terapias estimulan los mecanismos de auto-sanación del cuerpo a nivel molecular.
+                                </p>
+
+                                <div className="grid gap-6 pt-4">
+                                    {[
+                                        { title: "Terapia Celular", desc: "Uso de células madre y exosomas para reparación tisular.", icon: <Microscope className="w-5 h-5" /> },
+                                        { title: "Bio-Longevidad", desc: "Optimización de la edad biológica y vitalidad celular.", icon: <Activity className="w-5 h-5" /> },
+                                        { title: "Recuperación Acelerada", desc: "Reducción drástica de tiempos de sanación en lesiones.", icon: <Zap className="w-5 h-5" /> }
+                                    ].map((item, i) => (
+                                        <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-cyan-neon/30 transition-colors">
+                                            <div className="shrink-0 w-10 h-10 rounded-full bg-space-950 flex items-center justify-center text-cyan-neon border border-white/10">
+                                                {item.icon}
+                                            </div>
+                                            <div>
+                                                <h4 className="text-white font-bold mb-1">{item.title}</h4>
+                                                <p className="text-sm text-slate-400">{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="order-1 lg:order-2 relative h-[400px] md:h-[600px] w-full block">
+                            {/* Images Composition */}
+                            <div className="absolute top-0 right-0 w-3/4 h-3/4 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl shadow-cyan-neon/10 z-10 hover:scale-[1.02] transition-transform duration-500">
+                                <img src="/images/regen_2.png" alt="Human Bio-Interface" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-space-900/80 to-transparent"></div>
+                            </div>
+                            <div className="absolute bottom-0 left-0 w-2/3 h-2/3 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl shadow-purple-500/10 z-20 hover:scale-[1.02] transition-transform duration-500">
+                                <img src="/images/regen_1.png" alt="Cellular Regeneration" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-space-900/80 to-transparent"></div>
+                            </div>
+
+                            {/* Decorative Elements */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-cyan-neon/10 rounded-full blur-[60px] md:blur-[100px] pointer-events-none"></div>
                         </div>
                     </div>
                 </div>
