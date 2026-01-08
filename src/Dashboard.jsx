@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import DoctorsPanel from "./DoctorsPanel";
 import SessionsPanel from "./SessionsPanel"; // <--- NUEVO COMPONENTE IMPORTADO
+import { Bot, User } from "lucide-react";
 
 // --- CONFIGURACIÓN VISUAL (Prometheus / Ynti Brand) ---
 const BRAND = {
@@ -107,18 +108,14 @@ function OriginIcon({ origin }) {
   const isAI = ["ai", "ia", "bot"].includes(String(origin || "").toLowerCase());
   if (isAI) {
     return (
-      <div className="w-10 h-10 rounded-xl bg-quantum-500/10 flex items-center justify-center border border-quantum-500/30 shadow-[0_0_10px_rgba(168,85,247,0.2)]" title="Agendado por IA">
-        <svg className="w-5 h-5 text-quantum-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5" />
-        </svg>
+      <div className="w-10 h-10 rounded-xl bg-quantum-500/10 flex items-center justify-center border border-quantum-500/30 shadow-[0_0_15px_rgba(168,85,247,0.15)] group-hover:bg-quantum-500/20 transition-all duration-300" title="Agendado por IA">
+        <Bot className="w-5 h-5 text-quantum-500 drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" />
       </div>
     );
   }
   return (
-    <div className="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 border border-slate-700" title="Agendado Manualmente">
-      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-      </svg>
+    <div className="w-9 h-9 rounded-full bg-slate-800/50 flex items-center justify-center text-slate-500 border border-slate-700/50 shadow-inner group-hover:border-slate-500 transition-all duration-300" title="Agendado Manualmente">
+      <User className="w-4 h-4" />
     </div>
   );
 }
