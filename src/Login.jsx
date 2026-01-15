@@ -1,13 +1,14 @@
 // src/Login.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Lock, ArrowRight, AlertCircle, Home, Sparkles } from 'lucide-react';
+import { User, Lock, ArrowRight, AlertCircle, Home, Sparkles, Check } from 'lucide-react';
 import { supabase } from './supabaseClient';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(import.meta.env.VITE_ADMIN_EMAIL || '');
-  const [password, setPassword] = useState(import.meta.env.VITE_ADMIN_PASSWORD || '');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,7 +68,7 @@ export default function Login() {
         </div>
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-8 pt-0 space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 pt-0 space-y-6" autoComplete="off">
           {error && (
             <div className="flex items-center gap-3 bg-rose-500/10 text-rose-400 p-4 rounded-2xl text-sm border border-rose-500/20 animate-in fade-in slide-in-from-top-2">
               <AlertCircle size={18} className="shrink-0" />
@@ -84,6 +85,7 @@ export default function Login() {
               />
               <input
                 type="email"
+                autoComplete="off"
                 required
                 className="w-full pl-12 pr-4 py-4 border border-white/10 rounded-2xl bg-space-950/50 focus:bg-space-950 focus:border-cyan-neon/50 outline-none transition-all duration-200 font-medium text-white placeholder:text-slate-600"
                 placeholder="tu@correo.com"
@@ -102,6 +104,7 @@ export default function Login() {
               />
               <input
                 type="password"
+                autoComplete="new-password"
                 required
                 className="w-full pl-12 pr-4 py-4 border border-white/10 rounded-2xl bg-space-950/50 focus:bg-space-950 focus:border-cyan-neon/50 outline-none transition-all duration-200 font-medium text-white placeholder:text-slate-600"
                 placeholder="•••••••"
@@ -109,6 +112,15 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+          </div>
+
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setRememberMe(!rememberMe)}>
+            <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all duration-200 ${rememberMe ? 'bg-cyan-neon border-cyan-neon text-space-950' : 'border-white/20 bg-space-950/50 group-hover:border-cyan-neon/50'}`}>
+              {rememberMe && <Check size={14} strokeWidth={3} />}
+            </div>
+            <span className={`text-sm font-medium transition-colors ${rememberMe ? 'text-white' : 'text-slate-400 group-hover:text-slate-300'}`}>
+              Mantener sesión iniciada
+            </span>
           </div>
 
           <button
