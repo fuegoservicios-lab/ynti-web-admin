@@ -112,7 +112,7 @@ export default function Home() {
                         <div className="flex justify-center gap-6 md:gap-8 w-full md:w-auto">
                             {[
                                 { number: "15+", label: "Años Exp." },
-                                { number: "2k+", label: "Pacientes" },
+                                { number: "1k+", label: "Pacientes" },
                                 { number: "98%", label: "Éxito" }
                             ].map((stat, i) => (
                                 <div key={i} className="text-center">
