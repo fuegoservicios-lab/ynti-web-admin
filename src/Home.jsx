@@ -106,12 +106,11 @@ export default function Home() {
                 {/* Hero Footer Stats */}
                 <div className="absolute bottom-6 md:bottom-10 inset-x-0 w-full">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row md:justify-between items-center gap-4 border-t border-white/5 pt-4 md:pt-6">
-                        <div className="hidden md:block text-slate-500 text-xs font-mono">
-                            SYSTEM_STATUS: <span className="text-bio-500">OPTIMAL</span>
-                        </div>
+
+
                         <div className="flex justify-center gap-6 md:gap-8 w-full md:w-auto">
                             {[
-                                { number: "15+", label: "Años Exp." },
+                                { number: "10+", label: "Años Exp." },
                                 { number: "1k+", label: "Pacientes" },
                                 { number: "98%", label: "Éxito" }
                             ].map((stat, i) => (
@@ -228,7 +227,7 @@ export default function Home() {
                                     </p>
 
                                     <div className="flex items-center gap-2 text-xs font-mono text-cyan-neon font-bold tracking-widest uppercase">
-                                        <span>EXPLORAR_DATA</span>
+                                        <span>VER DETALLES</span>
                                         <ArrowRight className="w-4 h-4 transform group-hover:translate-x-2 transition-transform duration-300" />
                                     </div>
                                 </div>

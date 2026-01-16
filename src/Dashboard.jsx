@@ -420,8 +420,11 @@ export default function Dashboard() {
       {/* --- HEADER --- */}
       <header className="sticky top-0 z-30 glass-panel border-b-0 px-6 py-4 mb-8">
         <div className="max-w-[1600px] mx-auto flex justify-between items-center gap-4">
-          <Link to="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity" title="Ir al Inicio">
-            <h1 className="text-xl md:text-2xl font-bold font-heading text-white tracking-tight">PANEL_ADMIN</h1>
+          <Link to="/" className="flex items-center gap-4" title="Ir al Inicio">
+            <h1 className="text-xl md:text-2xl font-bold font-heading text-white tracking-tight">
+              <span className="md:hidden">PANEL_ADMIN</span>
+              <span className="hidden md:inline">Panel Administrativo</span>
+            </h1>
           </Link>
 
           <div className="flex items-center gap-4">
@@ -547,13 +550,13 @@ export default function Dashboard() {
               <table className="w-full text-left border-collapse">
                 <thead className="bg-[#0b101b] border-b border-white/5 text-[10px] uppercase text-slate-500 font-mono tracking-widest">
                   <tr>
-                    <th className="px-8 py-4">Bio-Data Paciente</th>
-                    <th className="px-6 py-4">Programación</th>
-                    <th className="px-6 py-4">Protocolo</th>
-                    <th className="px-6 py-4">Médico Asignado</th>
+                    <th className="px-8 py-4">Paciente</th>
+                    <th className="px-6 py-4">Fecha y Hora</th>
+                    <th className="px-6 py-4">Servicio</th>
+                    <th className="px-6 py-4">Doctor</th>
                     <th className="px-6 py-4">Estado</th>
-                    <th className="px-6 py-4 text-center">Source</th>
-                    <th className="px-6 py-4 text-center">Control</th>
+                    <th className="px-6 py-4 text-center">Origen</th>
+                    <th className="px-6 py-4 text-center">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -594,7 +597,7 @@ export default function Dashboard() {
                       </td>
                     </tr>
                   )) : (
-                    <tr><td colSpan="7" className="py-20 text-center text-slate-500 font-mono text-sm">NO_DATA_FOUND</td></tr>
+                    <tr><td colSpan="7" className="py-20 text-center text-slate-500 font-mono text-sm">No hay citas registradas</td></tr>
                   )}
                 </tbody>
               </table>
@@ -621,7 +624,7 @@ export default function Dashboard() {
 
                   <div className="grid grid-cols-2 gap-3 mb-6">
                     <div className="flex flex-col gap-1 p-3 rounded-2xl bg-white/5 border border-white/5">
-                      <span className="text-[9px] uppercase tracking-widest text-slate-500 font-mono">Programación</span>
+                      <span className="text-[9px] uppercase tracking-widest text-slate-500 font-mono">Fecha y Hora</span>
                       <div className="flex items-center gap-1.5 text-slate-200">
                         <svg className="w-3.5 h-3.5 text-cyan-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                         <span className="text-xs font-medium">{formatDateTime(apt.datetime).date}</span>
@@ -630,7 +633,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex flex-col gap-1 p-3 rounded-2xl bg-white/5 border border-white/5">
-                      <span className="text-[9px] uppercase tracking-widest text-slate-500 font-mono">Protocolo</span>
+                      <span className="text-[9px] uppercase tracking-widest text-slate-500 font-mono">Servicio</span>
                       <div className="flex items-center gap-1.5 text-slate-200">
                         <svg className="w-3.5 h-3.5 text-bio-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                         <span className="text-xs font-medium truncate">{apt.service}</span>
