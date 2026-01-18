@@ -422,8 +422,8 @@ export default function Dashboard() {
         <div className="max-w-[1600px] mx-auto flex justify-between items-center gap-4">
           <Link to="/" className="flex items-center gap-4" title="Ir al Inicio">
             <h1 className="text-xl md:text-2xl font-bold font-heading text-white tracking-tight">
-              <span className="md:hidden">PANEL_ADMIN</span>
-              <span className="hidden md:inline">Panel Administrativo</span>
+              <span className="md:hidden">Panel Administrador</span>
+              <span className="hidden md:inline">Panel Administrador</span>
             </h1>
           </Link>
 
